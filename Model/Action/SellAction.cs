@@ -29,5 +29,13 @@ namespace Model.Action
             this.Market = market;
             this.PricePerUnit = pricePerUnit;
         }
+
+
+        public void PerformAction(Agent guy)
+        {
+            var taken = guy.TakeItemFrom(
+                this.Good, this.Quantity);
+            this.Market.Sell(guy, taken, this.PricePerUnit);
+        }
     }
 }

@@ -12,18 +12,32 @@ namespace Model.Action
         {
             get { return Action.ActionType.Buy; }
         }
-        public Market Market { get; set; }
-        public Purchasable Purchasable { get; set; }
-        public Agent Buyer { get; set; }
-        public double Quantity { get; set; }
-        public BuyAction(
+        public Simulation Simulation { get; private set; }
+        public Market Market { get; private set; }
+        public Purchasable Purchasable { get; private set; }
+        public Agent Buyer { get; private set; }
+        public double Quantity { get; private set; }
+        public BuyAction( Simulation simulation,
             Market market, Purchasable purchasable,
             Agent buyer, double quantity)
         {
+            this.Simulation = simulation;
             this.Market = market;
             this.Purchasable = purchasable;
             this.Buyer = buyer;
             this.Quantity = quantity;
+        }
+
+        public void PerformAction(Agent guy)
+        {
+            var sn = this.Purchasable.SellersNumber;
+            var seller = this.Simulation.Agents[sn];
+
+            this.Market.Purchase(
+                guy,
+                seller,
+                this.Purchasable,
+                this.Quantity);
         }
     }
 }

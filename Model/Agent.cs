@@ -1,12 +1,12 @@
-﻿using Model.Action;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Model
+﻿namespace Model
 {
+    using Action;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     public class Agent
     {
         public int AgentNumber
@@ -15,6 +15,7 @@ namespace Model
             {
                 return this.agentNumber;
             }
+
             set
             {
                 if (this.agentNumber != -1)
@@ -50,6 +51,13 @@ namespace Model
             this.agentNumber = -1;
         }
 
+        public double GetPossesedQuantity(Good good)
+        {
+            if (this.Assets.ContainsKey(good))
+                return this.Assets[good].Quantity;
+            else
+                return 0.0;
+        }
         public void SetNumber(int number)
         {
 
@@ -60,25 +68,36 @@ namespace Model
         }
         public void GiveItemTo(Stack stack)
         {
-            var g = stack.Good;
-            var q = assets.ContainsKey(g) ? assets[g].Quantity : 0.0;
-            assets[g] = new Stack(g, stack.Quantity + q);
+            var good = stack.Good;
+            var quantity = this.assets.ContainsKey(good) ? this.assets[good].Quantity : 0.0;
+            assets[good] = new Stack(good, stack.Quantity + quantity);
         }
-        public void DepositTo(double totalPrice)
+        public void DepositTo(double credits)
         {
-            this.Credits += totalPrice;
+            this.Credits += credits;
         }
         internal void Consume(Good good, double quantity)
         {
             this.assets[good] = this.needs[good].Satisfy(
                 this.assets[good],
                 quantity);
+            if (this.assets[good] == null)
+                this.assets.Remove(good);
         }
         internal Stack TakeItemFrom(Good good, double quantity)
         {
             var sp = this.assets[good].Split(quantity);
-            this.assets[good] = sp.Item2;
+            if (sp.Item2 == null)
+                this.assets.Remove(good);
+            else
+                this.assets[good] = sp.Item2;
             return sp.Item1;
+        }
+        public IEnumerable<Tuple<Good, double>> GetNeedDeficits()
+        {
+            return this.Needs.Select(o => Tuple.Create<Good, double>(
+                o.Value.Good,
+                o.Value.MaxQuantity - o.Value.CurrentQuantity));
         }
 
         private Dictionary<Good, Stack> assets = new Dictionary<Good, Stack>();
@@ -102,16 +121,13 @@ namespace Model
         public override string ToString()
         {
             var num = this.agentNumber.ToString();
-            var needs = "[" + String.Join(", ", this.Needs.Values) + "]";
+            var needs = "[" + string.Join(", ", this.Needs.Values) + "]";
             var c = this.Credits.ToString();
-            var a = "[" + String.Join(", ", this.Assets.Values) + "]";
-            var aa = "[" + String.Join(", ", this.Actions) + "]";
+            var a = "[" + string.Join(", ", this.Assets.Values) + "]";
+            var aa = "[" + string.Join(", ", this.Actions) + "]";
 
-            return String.Format(
-                "Agent: num: '{0}', needs: '{1}', credit: '{2}', assets: '{3}', actions: '{4}'",
-                num, needs, c, a, aa);
+            return string.Format(
+                "Agent: num: '{0}', needs: '{1}', credit: '{2}', assets: '{3}', actions: '{4}'", num, needs, c, a, aa);
         }
-
-
     }
 }

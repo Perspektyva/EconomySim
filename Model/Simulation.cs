@@ -20,11 +20,9 @@ namespace Model
         }
         public void AddAgents(IEnumerable<Agent> agents)
         {
-            var newAgents = agents.ToList();
             foreach(var agent in agents)
             {
-                agent.AgentNumber = this.nextValidAgentNumber;
-                this.nextValidAgentNumber++;
+                agent.AgentNumber = this.nextValidAgentNumber++;
                 this.Agents[agent.AgentNumber] = agent;
             }
         }
@@ -41,9 +39,10 @@ namespace Model
                 .ToList();
             if (deadAgents.Any())
             {
-                Console.WriteLine(String.Format(
+                var message = String.Format(
                     "Agents [{0}] have died.",
-                    String.Join(",", deadAgents.Select(o=>o.Value.AgentNumber))));
+                    String.Join(",", deadAgents.Select(o => o.Value.AgentNumber)));
+                Console.WriteLine(message);
             }
             deadAgents
                 .ForEach(RemoveAgent);
@@ -59,12 +58,15 @@ namespace Model
             foreach(var agent in this.Agents)
             {
                 var actions = RaiseAgentIsPondering(agent.Value);
-                if (actions == null) continue;
+                if (actions == null)
+                {
+                    continue;
+                }
                 while (actions.Any())
                 {
-                    var a = actions.Dequeue();
-                    Log(a);
-                    HandleAction(agent.Value, a);
+                    var action = actions.Dequeue();
+                    Log(action);
+                    action.PerformAction(agent.Value);
                 }
             }
         }
@@ -140,53 +142,6 @@ namespace Model
 
         public event EventHandler<AgentEventArgs> AgentDied;
         public event EventHandler<AgentActionEventArgs> AgentIsPondering;
-
-        private void HandleAction(Agent agent, Action.IAction action)
-        {
-            switch (action.ActionType)
-            {
-                case Model.Action.ActionType.Consume:
-                    HandleConsumeAction(agent, (ConsumeAction)action);
-                    break;
-                case Model.Action.ActionType.Buy:
-                    HandleBuyAction(agent, (BuyAction)action);
-                    break;
-                case Model.Action.ActionType.Sell:
-                    HandleSellAction(agent, (SellAction)action);
-                    break;
-                default:
-                    throw new NotImplementedException(String.Format(
-                        "Handling of agent action '{0}' not implemented yet.",
-                        action.ActionType));
-            }
-        }
-
-        private void HandleSellAction(Agent agent, SellAction sellAction)
-        {
-            var taken = agent.TakeItemFrom(
-                sellAction.Good, sellAction.Quantity);
-            sellAction.Market.Sell(agent, taken, sellAction.PricePerUnit);
-        }
-        private void HandleBuyAction(
-            Agent actor, BuyAction buyAction)
-        {
-            var sn = buyAction.Purchasable.SellersNumber;
-            var seller = this.Agents[sn];
-
-            buyAction.Market.Purchase(
-                actor,
-                seller,
-                buyAction.Purchasable,
-                buyAction.Quantity);
-        }
-        private void HandleConsumeAction(
-            Agent agent,
-            ConsumeAction consumeAction)
-        {
-            agent.Consume(
-                consumeAction.Good,
-                consumeAction.Quantity);
-        }
 
         public override bool Equals(object obj)
         {

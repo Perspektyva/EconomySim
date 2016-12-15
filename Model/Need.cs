@@ -36,7 +36,6 @@ namespace Model
             if (!(obj is Need))
                 return false;
             var other = (Need)obj;
-
             return
                 this.CurrentQuantity == other.CurrentQuantity &&
                 this.DecayRate == other.DecayRate &&
@@ -47,13 +46,9 @@ namespace Model
         internal Stack Satisfy(Stack stack, double quantity)
         {
             var deficit = MaxQuantity - CurrentQuantity;
-            quantity = Math.Min(quantity, deficit);
-
-            var ss = stack.Split(quantity);
-
-            CurrentQuantity += quantity;
-
-            return ss.Item2;
+            var normalizedQuantity = Math.Min(quantity, deficit);
+            this.CurrentQuantity += normalizedQuantity;
+            return stack.Split(normalizedQuantity).Item2;
         }
     }
 }

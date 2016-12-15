@@ -26,7 +26,7 @@ namespace Model.Tests
             var m = new Market(new[] { p });
             s.AddMarket(m);
 
-            ab.Actions.Enqueue(new BuyAction(m, p, ab, 2));
+            ab.Actions.Enqueue(new BuyAction(s, m, p, ab, 2));
 
             s.Iterate();
 
@@ -48,7 +48,7 @@ namespace Model.Tests
             var m = new Market(new[] { p });
             s.AddMarket(m);
 
-            ab.Actions.Enqueue(new BuyAction(m, p, ab, 2.0));
+            ab.Actions.Enqueue(new BuyAction(s, m, p, ab, 2.0));
 
             s.Iterate();
 
@@ -70,7 +70,7 @@ namespace Model.Tests
             var m = new Market(new[] { p });
             s.AddMarket(m);
 
-            ab.Actions.Enqueue(new BuyAction(m, p, ab, 2.0));
+            ab.Actions.Enqueue(new BuyAction(s, m, p, ab, 2.0));
 
             s.Iterate();
 
@@ -91,7 +91,7 @@ namespace Model.Tests
             var m = new Market(new[] { p });
             s.AddMarket(m);
 
-            ab.Actions.Enqueue(new BuyAction(m, p, ab, 2.0));
+            ab.Actions.Enqueue(new BuyAction(s, m, p, ab, 2.0));
 
             s.Iterate();
 

@@ -26,12 +26,11 @@ namespace Model
                     new Stack(this.Good, quantityOfItem1),
                     null);
 
-            var g = this.Good;
-            var q1 = quantityOfItem1;
-            var q2 = this.Quantity - quantityOfItem1;
+            var good = this.Good;
+            var quantityOfItem2 = this.Quantity - quantityOfItem1;
             return new Tuple<Stack, Stack>(
-                new Stack(g, q1),
-                new Stack(g, q2));
+                new Stack(good, quantityOfItem1),
+                new Stack(good, quantityOfItem2));
         }
 
         public override bool Equals(object obj)

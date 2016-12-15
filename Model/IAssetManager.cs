@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Action
+namespace Model
 {
-    public interface IAction
+    public interface IAssetManager
     {
-        ActionType ActionType { get; }
 
-        void PerformAction(Agent guy);
     }
 }

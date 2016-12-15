@@ -9,6 +9,8 @@ namespace Model
 {
     interface IAgentController
     {
-        IList<IAction> GetActions(Agent agent);
+        IList<IAction> GetActions(
+            Agent agent,
+            Simulation simulation);
     }
 }

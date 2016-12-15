@@ -9,7 +9,7 @@ namespace Model
 {
     class BrainDead : IAgentController
     {
-        public IList<IAction> GetActions(Agent agent)
+        public IList<IAction> GetActions(Agent agent, Simulation simulation)
         {
             return new List<IAction>();
         }

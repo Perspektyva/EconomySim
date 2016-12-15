@@ -18,9 +18,19 @@ namespace Model.Action
             this.Quantity = quantity;
         }
 
+
+
         public ActionType ActionType
         {
             get { return Action.ActionType.Consume; }
+        }
+
+
+        public void PerformAction(Agent guy)
+        {
+            guy.Consume(
+                this.Good,
+                this.Quantity);
         }
     }
 }

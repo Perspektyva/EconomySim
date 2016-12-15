@@ -9,29 +9,96 @@ namespace Model
 {
     public class BasicSurvivor : IAgentController
     {
-        public IList<IAction> GetActions(Agent agent)
+        public IList<IAction> GetActions(Agent agent, Simulation simulation)
         {
-            var needs = AssessAndSuggestNeedSatisfaction(agent.Needs);
-            foreach (var need in needs)
+            var consumeActions = TopUp(agent).Cast<IAction>();
+            var stockpilingActions = GetStockpilingActions(agent, simulation);
+            var credits = agent.Credits;
+            var validStockPilingActions = stockpilingActions.TakeWhile(ba =>
+                {
+                    var p = ba.Quantity * ba.Purchasable.PricePerUnit;
+                    if (credits > p)
+                    {
+                        credits -= p;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                })
+                .Cast<IAction>();
+            return consumeActions.Concat(validStockPilingActions).ToList();
+        }
+
+        private IEnumerable<ConsumeAction> TopUp(Agent agent)
+        {
+            return agent.GetNeedDeficits()
+                .Select(o => ComputeConsumeActionOrNull(o.Item1, o.Item2, agent))
+                .Where(o => o != null);
+        }
+
+        private ConsumeAction ComputeConsumeActionOrNull(Good good, double deficit, Agent agent)
+        {
+            var availableQuantity = agent.GetPossesedQuantity(good);
+            if (availableQuantity <= 0)
             {
-#error cont. from here
-                // Do we have resource on hand?
-                    // Consume
-                // else
-                    // Are resource available on market?
-                        // Do we have enough credits?
-                            // Buy cheapest
-                            // Consume
-                        // else
-                            // Attempt to sell things for credits (labour, etc...), have func be mindfull of the ulimate goal of the credit acquisition (the need).
-                    // else
-                        // Get desperate? Wait...
-                        
+                return null;
             }
-            // I guess reshuffle our market, if we have any purchasables.
-            // Set major goals (credit acquisition ofr founding abussiness).
-            // foreach bussiness
-            //   manage
+            var consumableQuantity = Math.Min(deficit, availableQuantity);
+            return new ConsumeAction(agent, good, consumableQuantity);
+        }
+
+        private IEnumerable<BuyAction> GetStockpilingActions(
+            Agent agent,
+            Simulation simulation)
+        {
+            var shoppingList = agent.Needs
+                .Select(o => new
+                {
+                    Good = o.Key,
+                    Available = agent.GetPossesedQuantity(o.Key),
+                    Threshold = 48 * o.Value.DecayRate,
+                    RaiseTo = 72 * o.Value.DecayRate
+                })
+                .Where(o => o.Available < o.Threshold);
+            return shoppingList.SelectMany(o =>
+                AttemptToBuySome(
+                    simulation,
+                    simulation.Market,
+                    agent,
+                    o.Good,
+                    o.RaiseTo - o.Available));
+        }
+
+        private IEnumerable<BuyAction> AttemptToBuySome(
+            Simulation simulation,
+            Market market,
+            Agent buyer,
+            Good good,
+            double amount)
+        {
+            var potentialPurchases = market.Purchasables
+                .Where(o => o.Stack.Good == good)
+                .OrderBy(o => o.PricePerUnit);
+            var neededQuantity = amount;
+            foreach (var pp in potentialPurchases)
+            {
+                if (neededQuantity <= 0.0)
+                {
+                    yield break;
+                }
+                else if (pp.Stack.Quantity > neededQuantity)
+                {
+                    yield return new BuyAction(simulation, market, pp, buyer, neededQuantity);
+                    yield break;
+                }
+                else
+                {
+                    yield return new BuyAction(simulation, market, pp, buyer, pp.Stack.Quantity);
+                    neededQuantity -= pp.Stack.Quantity;
+                }
+            }
         }
 
         /// <summary>
