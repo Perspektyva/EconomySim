@@ -16,7 +16,8 @@ namespace ConsoleSimulator
                 {
                     {food.Name, food}
                 };
-            Simulation sim = new Simulation(goods);
+            Clock clock = new Clock(DateTime.MinValue);
+            Simulation sim = new Simulation(goods, clock, new FileLogger(clock, "sample.log"));
             var foodNeed = new Need(food, 30000, 20000, 150.0);
             var agents = SpawnAgent(new[] { foodNeed }, 500.0).Take(10).ToArray();
             sim.AddAgents(agents);
@@ -41,8 +42,12 @@ namespace ConsoleSimulator
                 sim.Iterate(1.0);
 
                 if (!sim.Agents.Any())
+                {
+                    Console.WriteLine("All agents have died.");
                     break;
+                }
             }
+            Console.WriteLine("Finished.");
             Console.ReadKey();
         }
 

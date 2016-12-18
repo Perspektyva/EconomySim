@@ -51,9 +51,13 @@
     <Compile Include="AgentEventArgs.cs" />
     <Compile Include="BasicSurvivor.cs" />
     <Compile Include="BrainDead.cs" />
+    <Compile Include="Clock.cs" />
     <Compile Include="Good.cs" />
     <Compile Include="IAgentController.cs" />
     <Compile Include="IAssetManager.cs" />
+    <Compile Include="Logger\ILogger.cs" />
+    <Compile Include="ITimeProvider.cs" />
+    <Compile Include="Logger\NullLogger.cs" />
     <Compile Include="Market.cs" />
     <Compile Include="Need.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
