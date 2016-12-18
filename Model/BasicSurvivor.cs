@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Model
 {
+    // FIXME: Generates 0 unit buy actions.
     public class BasicSurvivor : IAgentController
     {
         public IList<IAction> GetActions(Agent agent, Simulation simulation)
@@ -33,9 +34,15 @@ namespace Model
 
         private IEnumerable<ConsumeAction> TopUp(Agent agent)
         {
-            return agent.GetNeedDeficits()
-                .Select(o => ComputeConsumeActionOrNull(o.Item1, o.Item2, agent))
-                .Where(o => o != null);
+            // Top up only if need is lower than 75%.
+            return agent
+                .Needs
+                .Where(o => o.Value.CurrentQuantity / o.Value.MaxQuantity < 0.75)
+                .Select(o => ComputeConsumeActionOrNull(
+                    good: o.Key,
+                    deficit: o.Value.MaxQuantity - o.Value.CurrentQuantity,
+                    agent: agent))
+            .Where(o => o != null);
         }
 
         private ConsumeAction ComputeConsumeActionOrNull(Good good, double deficit, Agent agent)

@@ -17,9 +17,12 @@ namespace ConsoleSimulator
                     {food.Name, food}
                 };
             Clock clock = new Clock(DateTime.MinValue);
-            Simulation sim = new Simulation(goods, clock, new FileLogger(clock, "sample.log"));
+            Simulation sim = new Simulation(
+                goods, clock, new FileLogger(clock, GetLogFilePath()));
             var foodNeed = new Need(food, 30000, 20000, 150.0);
-            var agents = SpawnAgent(new[] { foodNeed }, 500.0).Take(10).ToArray();
+            var agents = SpawnAgent(new[] { foodNeed }, 500.0)
+                .Take(10)
+                .ToArray();
             sim.AddAgents(agents);
             var agentsAndTheirBrains = agents
                 .ToDictionary(o => o, o => new BasicSurvivor());
@@ -49,6 +52,13 @@ namespace ConsoleSimulator
             }
             Console.WriteLine("Finished.");
             Console.ReadKey();
+        }
+
+        private static string GetLogFilePath()
+        {
+            var now = DateTime.Now;
+            var fileName = String.Format("{0:yyyyMMdd_HHmmssfff}.log", now);
+            return fileName;
         }
 
         public static IEnumerable<Agent> SpawnAgent(
