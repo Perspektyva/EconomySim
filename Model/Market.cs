@@ -23,10 +23,12 @@ namespace Model
         public void Purchase(Agent buyer, Agent seller,
             Purchasable purchasable, double quantity)
         {
-            var p = this.Purchasables
+            var p = this.purchasables
                 .Where(o => o == purchasable)
                 .First();
             p.Purchase(buyer, seller, quantity);
+            if (p.Stack.Quantity <= 0.0)
+                this.purchasables.Remove(p);
         }
 
         List<Purchasable> purchasables = new List<Purchasable>();

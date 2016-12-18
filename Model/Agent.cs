@@ -38,16 +38,15 @@
                 return this.assets;
             }
         }
-        public Queue<IAction> Actions { get; private set; }
 
         public Agent(
             IEnumerable<Need> needs,
             double credits)
         {
+            needs = needs ?? Enumerable.Empty<Need>();
             this.needs = needs
                 .ToDictionary(o => o.Good, o => o);
             this.Credits = credits;
-            this.Actions = new Queue<IAction>();
             this.agentNumber = -1;
         }
 
@@ -115,8 +114,7 @@
                 this.agentNumber == other.agentNumber &&
                 this.Needs.SequenceEqual(other.Needs) &&
                 this.Credits == other.Credits &&
-                this.Assets.SequenceEqual(other.Assets) &&
-                this.Actions.SequenceEqual(other.Actions);
+                this.Assets.SequenceEqual(other.Assets);
         }
         public override string ToString()
         {
@@ -124,10 +122,9 @@
             var needs = "[" + string.Join(", ", this.Needs.Values) + "]";
             var c = this.Credits.ToString();
             var a = "[" + string.Join(", ", this.Assets.Values) + "]";
-            var aa = "[" + string.Join(", ", this.Actions) + "]";
 
             return string.Format(
-                "Agent: num: '{0}', needs: '{1}', credit: '{2}', assets: '{3}', actions: '{4}'", num, needs, c, a, aa);
+                "Agent: num: '{0}', needs: '{1}', credit: '{2}', assets: '{3}'", num, needs, c, a);
         }
     }
 }

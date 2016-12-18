@@ -25,8 +25,11 @@ namespace Model.Tests
                 @as.AgentNumber, 40.0, new Stack(f, 100.0));
             var m = new Market(new[] { p });
             s.AddMarket(m);
-
-            ab.Actions.Enqueue(new BuyAction(s, m, p, ab, 2));
+            s.AgentIsPondering += (snd, args) =>
+                {
+                    args.EnqueueAction(new BuyAction(s, m, p, ab, 2));
+                    args.Handled = true;
+                };
 
             s.Iterate();
 
@@ -47,8 +50,11 @@ namespace Model.Tests
                 @as.AgentNumber, 40.0, new Stack(f, 100.0));
             var m = new Market(new[] { p });
             s.AddMarket(m);
-
-            ab.Actions.Enqueue(new BuyAction(s, m, p, ab, 2.0));
+            s.AgentIsPondering += (sender, args) =>
+                {
+                    args.EnqueueAction(new BuyAction(s, m, p, ab, 2.0));
+                    args.Handled = true;
+                };
 
             s.Iterate();
 
@@ -69,8 +75,11 @@ namespace Model.Tests
                 @as.AgentNumber, 40.0, new Stack(f, 100.0));
             var m = new Market(new[] { p });
             s.AddMarket(m);
-
-            ab.Actions.Enqueue(new BuyAction(s, m, p, ab, 2.0));
+            s.AgentIsPondering += (sender, args) =>
+                {
+                    args.EnqueueAction(new BuyAction(s, m, p, ab, 2.0));
+                    args.Handled = true;
+                };
 
             s.Iterate();
 
@@ -81,22 +90,28 @@ namespace Model.Tests
         {
             var goods = new[] { "Food" }
                 .ToDictionary(o => o, o => new Good(o));
-            var s = new Simulation(goods);
-            var f = goods["Food"];
-            var ab = new Agent(Enumerable.Empty<Need>(), 100.0);
-            var @as = new Agent(Enumerable.Empty<Need>(), 100.0);
-            s.AddAgents(new[] { ab, @as });
-            var p = new Purchasable(
-                @as.AgentNumber, 40.0, new Stack(f, 100.0));
-            var m = new Market(new[] { p });
-            s.AddMarket(m);
+            var simulation = new Simulation(goods);
+            var food = goods["Food"];
+            var buyer = new Agent(Enumerable.Empty<Need>(), 100.0);
+            var seller = new Agent(Enumerable.Empty<Need>(), 100.0);
+            simulation.AddAgents(new[] { buyer, seller });
+            var purchasable = new Purchasable(
+                seller.AgentNumber, 40.0, new Stack(food, 100.0));
+            var market = new Market(new[] { purchasable });
+            simulation.AddMarket(market);
+            simulation.AgentIsPondering += (sender, args) =>
+            {
+                if (args.Agent != buyer)
+                    return;
+                args.EnqueueAction(new BuyAction(
+                    simulation, market, purchasable, buyer, 2.0));
+                args.Handled = true;
+            };
 
-            ab.Actions.Enqueue(new BuyAction(s, m, p, ab, 2.0));
+            simulation.Iterate();
 
-            s.Iterate();
-
-            Assert.AreEqual(1, m.Purchasables.Count());
-            Assert.AreEqual(98.0, m.Purchasables.First().Stack.Quantity);
+            Assert.AreEqual(1, market.Purchasables.Count());
+            Assert.AreEqual(98.0, market.Purchasables.First().Stack.Quantity);
         }
 
         [TestMethod()]
@@ -166,7 +181,11 @@ namespace Model.Tests
             sa.AddAgents(new[] { aa });
             var ma = new Market(Enumerable.Empty<Purchasable>());
             sa.AddMarket(ma);
-            aa.Actions.Enqueue(new ConsumeAction(aa, fa, 2000.0));
+            sa.AgentIsPondering += (sender, args) =>
+                {
+                    args.EnqueueAction(new ConsumeAction(aa, fa, 2000.0));
+                    args.Handled = true;
+                };
 
             sa.Iterate(1.0);
 
@@ -196,9 +215,12 @@ namespace Model.Tests
             sim.AddAgents(new[] { agent });
             var market = new Market(Enumerable.Empty<Purchasable>());
             sim.AddMarket(market);
-            var sellAction =
-                new SellAction(agent, food, 80000.0, market, 0.01);
-            agent.Actions.Enqueue(sellAction);
+            sim.AgentIsPondering += (snd, ea) =>
+            {
+                ea.EnqueueAction(new SellAction(
+                    agent, food, 80000.0, market, 0.01));
+                ea.Handled = true;
+            };
             return sim;
         }
         Simulation SimWithAgentFoodInMarket()
@@ -225,6 +247,43 @@ namespace Model.Tests
             actual.Iterate(1.0);
             var expected = SimWithAgentFoodInMarket();
             Assert.AreEqual(expected, actual);
+        }
+
+        Simulation SimulationWithSellerWithPurchAndBuyer()
+        {
+            var food = new Good("food");
+            var goods = new[] { food }.ToDictionary(o => o.Name, o => o);
+            var simulation = new Simulation(goods);
+            var seller = new Agent(null, 0.0);
+            simulation.AddAgents(new[] { seller });
+            var purchasable = new Purchasable(
+                seller.AgentNumber, 10.0, new Stack(food, 10.0));
+            var market = new Market(new[] { purchasable });
+            simulation.AddMarket(market);
+            var buyer = new Agent(null, 200.0);
+            simulation.AddAgents(new[] { buyer });
+            simulation.AgentIsPondering += (s, e) =>
+            {
+                if (e.Agent == buyer)
+                {
+                    e.EnqueueAction(new BuyAction(
+                        simulation,
+                        market,
+                        purchasable,
+                        buyer,
+                        10.0));
+                    e.Handled = true;
+                }
+            };
+            return simulation;
+        }
+
+        [TestMethod()]
+        public void Simulation_Iterate_PurchasableStackGetsDeleted()
+        {
+            var actual = SimulationWithSellerWithPurchAndBuyer();
+            actual.Iterate();
+            Assert.AreEqual(0, actual.Market.Purchasables.Count());
         }
     }
 }
