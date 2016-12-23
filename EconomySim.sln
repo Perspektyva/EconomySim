@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelTests", "ModelTests\Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleSimulator", "ConsoleSimulator\ConsoleSimulator.csproj", "{A514AB01-9FC3-4D98-A134-0C3E74A1368F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agents", "Agents\Agents.csproj", "{8BAC6994-572B-4F1A-AC58-ED93130E6A1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{A514AB01-9FC3-4D98-A134-0C3E74A1368F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A514AB01-9FC3-4D98-A134-0C3E74A1368F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A514AB01-9FC3-4D98-A134-0C3E74A1368F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BAC6994-572B-4F1A-AC58-ED93130E6A1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BAC6994-572B-4F1A-AC58-ED93130E6A1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BAC6994-572B-4F1A-AC58-ED93130E6A1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BAC6994-572B-4F1A-AC58-ED93130E6A1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

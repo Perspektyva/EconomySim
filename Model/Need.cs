@@ -48,7 +48,7 @@ namespace Model
             var deficit = MaxQuantity - CurrentQuantity;
             var normalizedQuantity = Math.Min(quantity, deficit);
             this.CurrentQuantity += normalizedQuantity;
-            return stack.Split(normalizedQuantity).Item2;
+            return Stack.SplitStack(stack, normalizedQuantity).Item2;
         }
     }
 }

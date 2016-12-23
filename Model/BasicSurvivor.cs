@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    // FIXME: Generates 0 unit buy actions.
     public class BasicSurvivor : IAgentController
     {
         public IList<IAction> GetActions(Agent agent, Simulation simulation)

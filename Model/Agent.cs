@@ -85,7 +85,7 @@
         }
         internal Stack TakeItemFrom(Good good, double quantity)
         {
-            var sp = this.assets[good].Split(quantity);
+            var sp = Stack.SplitStack(this.assets[good], quantity);
             if (sp.Item2 == null)
                 this.assets.Remove(good);
             else

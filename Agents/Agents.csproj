@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E131A302-A6A9-4B08-994E-9CCD7F6F8A3D}</ProjectGuid>
+    <ProjectGuid>{8BAC6994-572B-4F1A-AC58-ED93130E6A1B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Model</RootNamespace>
-    <AssemblyName>Model</AssemblyName>
+    <RootNamespace>Agents</RootNamespace>
+    <AssemblyName>Agents</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,38 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Action\ActionType.cs" />
-    <Compile Include="Action\BuyAction.cs" />
-    <Compile Include="Action\ConsumeAction.cs" />
-    <Compile Include="Action\IAction.cs" />
-    <Compile Include="Action\SellAction.cs" />
-    <Compile Include="Agent.cs">
-      <ExcludeFromStyleCop>False</ExcludeFromStyleCop>
-    </Compile>
-    <Compile Include="AgentActionEventArgs.cs" />
-    <Compile Include="AgentEventArgs.cs" />
-    <Compile Include="BasicSurvivor.cs" />
-    <Compile Include="BrainDead.cs" />
-    <Compile Include="Clock.cs" />
-    <Compile Include="Good.cs" />
-    <Compile Include="IAgentController.cs" />
-    <Compile Include="IAssetManager.cs" />
-    <Compile Include="Logger\ILogger.cs" />
-    <Compile Include="ITimeProvider.cs" />
-    <Compile Include="Logger\NullLogger.cs" />
-    <Compile Include="Market.cs" />
-    <Compile Include="Need.cs" />
+    <Compile Include="IAgentModule.cs" />
+    <Compile Include="ModularAgent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Purchasable.cs" />
-    <Compile Include="Simulation.cs" />
-    <Compile Include="Stack.cs" />
-    <Compile Include="Wallet.cs" />
-    <Compile Include="Warehouse.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sketch.xml">
-      <SubType>Designer</SubType>
-    </Content>
+    <ProjectReference Include="..\Model\Model.csproj">
+      <Project>{e131a302-a6a9-4b08-994e-9ccd7f6f8a3d}</Project>
+      <Name>Model</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
