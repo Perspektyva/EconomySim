@@ -13,7 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleSimulator", "Console
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agents", "Agents\Agents.csproj", "{8BAC6994-572B-4F1A-AC58-ED93130E6A1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "World", "World\World.csproj", "{0B056810-556E-406A-A605-ABF4455A91F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "World", "World\World.csproj", "{0B056810-556E-406A-A605-ABF4455A91F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorldTests", "WorldTests\WorldTests.csproj", "{337C4BF0-0894-4B3D-BBF1-08E73C4C8355}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{0B056810-556E-406A-A605-ABF4455A91F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0B056810-556E-406A-A605-ABF4455A91F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B056810-556E-406A-A605-ABF4455A91F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{337C4BF0-0894-4B3D-BBF1-08E73C4C8355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{337C4BF0-0894-4B3D-BBF1-08E73C4C8355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{337C4BF0-0894-4B3D-BBF1-08E73C4C8355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{337C4BF0-0894-4B3D-BBF1-08E73C4C8355}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
