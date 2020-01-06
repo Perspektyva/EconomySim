@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 
-namespace World.Map
+namespace World.Square
 {
-    public class SquareMap
+    public class SquareWorld
     {
         private SquareCell[] cells;
 
@@ -11,7 +11,7 @@ namespace World.Map
         private readonly int edge;
         private readonly int offset;
 
-        public SquareMap(int radius)
+        public SquareWorld(int radius)
         {
             this.edge = radius * 2 - 1;
             var cellCount = this.edge * this.edge;

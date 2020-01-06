@@ -1,16 +1,16 @@
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using World.Map;
+using World.Square;
 
 namespace WorldTests
 {
     [TestClass]
-    public class SqureMapTests
+    public class SqureWorldTests
     {
         [TestMethod]
-        public void Should_ConstructSingleCellMap()
+        public void Should_ConstructSingleCellWorld()
         {
-            SquareMap map = new SquareMap(1);
+            SquareWorld map = new SquareWorld(1);
 
             map.GetCell(0, 0).Should().NotBeNull();
             map.GetCell(0, 0).Should().BeSameAs(map.GetCell(0, 0));
@@ -18,9 +18,9 @@ namespace WorldTests
         }
 
         [TestMethod]
-        public void Should_ConstructMapOfRadius2()
+        public void Should_ConstructSquareWorldOfRadius2()
         {
-            SquareMap map = new SquareMap(2);
+            SquareWorld map = new SquareWorld(2);
 
             map.GetCell(0, 0).Should().NotBeNull();
             map.GetCell(1, 1).Should().NotBeNull();
@@ -30,9 +30,9 @@ namespace WorldTests
         }
 
         [TestMethod]
-        public void Should_ConstructMapOfRadius10()
+        public void Should_ConstructSquareWorldOfRadius10()
         {
-            SquareMap map = new SquareMap(10);
+            SquareWorld map = new SquareWorld(10);
 
             map.GetCell(0, 0).Should().NotBeNull();
             map.GetCell(9, 8).Should().NotBeNull();
