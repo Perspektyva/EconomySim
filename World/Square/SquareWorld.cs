@@ -53,21 +53,4 @@ namespace World.Square
             return null;
         }
     }
-
-    public class SquareCell
-    {
-
-    }
-
-    public struct SquareCoord
-    {
-        public int X;
-        public int Y;
-
-        public SquareCoord(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-    }
 }
