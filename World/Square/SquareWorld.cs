@@ -6,8 +6,7 @@ namespace World.Square
     {
         private SquareCell[] cells;
 
-        private readonly int lowerEdgeBoundInclusive;
-        private readonly int upperEdgeBoundInclusive;
+        private readonly IntRange bound;
         private readonly int edge;
         private readonly int offset;
 
@@ -19,8 +18,7 @@ namespace World.Square
             int firstX = 1 - radius;
             int firstY = 1 - radius;
 
-            this.lowerEdgeBoundInclusive = firstX;
-            this.upperEdgeBoundInclusive = -this.lowerEdgeBoundInclusive;
+            this.bound = IntRange.Inclusive(firstX, -firstX);
 
             this.offset = 0 - (firstY * this.edge + firstX);
 
@@ -37,7 +35,7 @@ namespace World.Square
 
         public SquareCell GetCell(int x, int y)
         {
-            if (x < this.lowerEdgeBoundInclusive || x > this.upperEdgeBoundInclusive || y < this.lowerEdgeBoundInclusive || y > this.upperEdgeBoundInclusive)
+            if (!this.bound.Contains(x) || !this.bound.Contains(y))
             {
                 return null;
             }
