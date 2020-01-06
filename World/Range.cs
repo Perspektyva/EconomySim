@@ -2,8 +2,8 @@
 {
     public struct IntRange
     {
-        int lowerInclusive;
-        int upperInclusive;
+        private int lowerInclusive;
+        private int upperInclusive;
 
         private IntRange(int lowerInclusive, int upperInclusive)
         {
